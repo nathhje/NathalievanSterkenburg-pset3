@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -60,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     // opens FavoriteActivity when button is pressed
     public void toFavorites(View view) {
 
-//        ArrayList<String> IDs = new ArrayList<String>();
-//        ArrayList<String> titles = new ArrayList<String>();
-
         // favorieten worden opgehaald
         SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
         Map<String,?> entries = pref.getAll();
@@ -72,12 +67,8 @@ public class MainActivity extends AppCompatActivity {
         String[] titles = new String[entries.size()];
         Integer i = 0;
 
-        Log.i(String.valueOf(theIDs), "iets");
-
         // favorieten worden in ArrayList gestopt
         for (String str : theIDs) {
-            Log.i(str, pref.getString(str, null));
-
             IDs[i] = str;
             titles[i] = pref.getString(str, null);
             i++;

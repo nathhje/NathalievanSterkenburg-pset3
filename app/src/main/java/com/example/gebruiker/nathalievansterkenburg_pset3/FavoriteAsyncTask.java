@@ -14,29 +14,35 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Nathalie on 26-2-2017.
+ * Created by Nathalie van Sterkenburg on 26-2-2017.
+ *
+ * Retrieves additional information on movie.
  */
 
-class FavoriteAsyncTask extends AsyncTask<String, Integer, String>{
+public class FavoriteAsyncTask extends AsyncTask<String, Integer, String>{
 
     Context context;
     FavoriteActivity mainAct;
     String ID;
 
+    // context and mainAct are initialized
     public FavoriteAsyncTask(FavoriteActivity main) {
         this.mainAct = main;
         this.context = this.mainAct.getApplicationContext();
     }
 
+    // let's user know program is waiting for result
     protected void onPreExecute() {
         Toast.makeText(context, "retrieving info", Toast.LENGTH_SHORT).show();
     }
 
+    // information is retrieved
     protected String doInBackground(String... parameters) {
         ID = parameters[1];
 
         try {
 
+            // with use of HttpRequestHelper
             return HttpRequestHelper.downloadFromServer(parameters);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -45,16 +51,21 @@ class FavoriteAsyncTask extends AsyncTask<String, Integer, String>{
         return "";
     }
 
+    // processes result from HttpRequestHelper
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
+        // initializes different types of info
         String title = "error";
         String plot = "error";
         String poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTY2MTk3MDQ1N15BMl5BanBnXkFtZTcwMzI4NzA2NQ@@._V1_SX300.jpg";
 
         try {
+
+            // results are put into JSONObject
             JSONObject moviesearch = new JSONObject(result);
 
+            // info is extracted from JSONObject
             title = moviesearch.getString("Title");
             plot = moviesearch.getString("Plot");
             poster = moviesearch.getString("Poster");
@@ -63,6 +74,7 @@ class FavoriteAsyncTask extends AsyncTask<String, Integer, String>{
             e.printStackTrace();
         }
 
+        // the new activity is started with the data
         this.mainAct.favoriteStartIntent(title, plot, ID, poster);
     }
 }

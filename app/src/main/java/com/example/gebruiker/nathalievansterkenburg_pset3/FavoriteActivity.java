@@ -24,25 +24,27 @@ public class FavoriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
-        Log.i("kom ik", "toevallig hier");
+
         makeFavoriteList();
     }
 
+    // creates list of favorites
     private void makeFavoriteList() {
 
+        // retrieves lists favorites
         String[] titles = getIntent().getStringArrayExtra("titles");
         final String[] IDs = getIntent().getStringArrayExtra("IDs");
 
-        Log.i("daar gaan", "we weer");
-
+        // adapter is created
         ArrayAdapter adapter = new ArrayAdapter<>
                 (this, android.R.layout.simple_list_item_1, android.R.id.text1, titles);
 
+        // adapter is set to ListView
         favorites = (ListView) findViewById(R.id.fave);
         assert favorites != null;
         favorites.setAdapter(adapter);
 
-
+        // retrieves additional information on a favorite when clicked
         final FavoriteAsyncTask asyncTask = new FavoriteAsyncTask(this);
         favorites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,15 +57,21 @@ public class FavoriteActivity extends AppCompatActivity {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id){
     }
 
+    // starts InfoActivity when asyncTask is done retrieving info
     public void favoriteStartIntent(String title, String plot, String ID, String poster) {
+
         Intent dataIntent = new Intent(this, InfoActivity.class);
+
+        // info is added to intent as extra
         dataIntent.putExtra("title", title);
         dataIntent.putExtra("plot", plot);
         dataIntent.putExtra("ID", ID);
         dataIntent.putExtra("poster", poster);
+
         startActivity(dataIntent);
     }
 
+    // go back to start screen when Back is pressed
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, MainActivity.class);

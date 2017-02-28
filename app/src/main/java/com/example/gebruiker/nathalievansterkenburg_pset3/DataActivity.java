@@ -36,6 +36,7 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         makeTrackAdapter();
     }
 
+    // creates list of search results
     public void makeTrackAdapter() {
 
         // adapter is initialized
@@ -68,7 +69,6 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
     public void detailsStartIntent(String title, String plot, String ID, String poster) {
 
         Intent dataIntent = new Intent(this, InfoActivity.class);
-        Log.i(title, plot);
 
         // movie information are all extra's
         dataIntent.putExtra("title", title);
@@ -76,7 +76,6 @@ public class DataActivity extends AppCompatActivity implements AdapterView.OnIte
         dataIntent.putExtra("ID", ID);
         dataIntent.putExtra("poster", poster);
 
-        Log.i(ID, String.valueOf(dataIntent));
         // InfoActivity
         startActivity(dataIntent);
     }

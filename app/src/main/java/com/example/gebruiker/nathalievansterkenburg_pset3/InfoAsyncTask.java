@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by Nathalie van Sterkenburg on 26-2-2017.
  *
- * Retrieves additional information on movie
+ * Retrieves additional information on movie.
  */
 
 public class InfoAsyncTask extends AsyncTask<String, Integer, String>{
@@ -38,7 +38,6 @@ public class InfoAsyncTask extends AsyncTask<String, Integer, String>{
 
     // information is retrieved
     protected String doInBackground(String... parameters) {
-
         ID = parameters[1];
 
         try {
@@ -56,13 +55,17 @@ public class InfoAsyncTask extends AsyncTask<String, Integer, String>{
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
+        // initializes different types of info
         String title = "error";
         String plot = "error";
         String poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTY2MTk3MDQ1N15BMl5BanBnXkFtZTcwMzI4NzA2NQ@@._V1_SX300.jpg";
 
         try {
+
+            // results are put into JSONObject
             JSONObject moviesearch = new JSONObject(result);
 
+            // info is extracted from JSONObject
             title = moviesearch.getString("Title");
             plot = moviesearch.getString("Plot");
             poster = moviesearch.getString("Poster");
@@ -71,6 +74,7 @@ public class InfoAsyncTask extends AsyncTask<String, Integer, String>{
             e.printStackTrace();
         }
 
-        this.mainAct.detailsStartIntent(title, plot, ID,poster);
+        // the new activity is started with the data
+        this.mainAct.detailsStartIntent(title, plot, ID, poster);
     }
 }

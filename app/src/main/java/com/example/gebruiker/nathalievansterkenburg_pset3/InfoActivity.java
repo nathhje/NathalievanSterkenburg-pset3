@@ -24,9 +24,11 @@ import static android.os.Build.ID;
 
 public class InfoActivity extends AppCompatActivity {
 
+    // checks if movie is a favorite, used to decide between add and remove as favorite button
+    boolean favorites = false;
+
     String ID;
     String title;
-    boolean favorites = false;
     Set<String> theIDs;
 
     @Override
@@ -35,22 +37,17 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        Log.i("mar dit niet", "lijkt het op");
-
         makeMovie();
     }
 
+    // creates screen with additional information
     public void makeMovie() {
 
-        Log.i("of toch", "wel");
-        
+        // info of movie is initialized
         title = getIntent().getStringExtra("title");
         String plot = getIntent().getStringExtra("plot");
         ID = getIntent().getStringExtra("ID");
-        
         String poster = getIntent().getStringExtra("poster");
-
-        Log.i(ID, title);
 
         TextView setTitle = (TextView) findViewById(R.id.title);
         TextView setPlot = (TextView) findViewById(R.id.plot);
@@ -58,86 +55,91 @@ public class InfoActivity extends AppCompatActivity {
 
         setTitle.setText(title);
         setPlot.setText(plot);
+
+        // poster is a url and is converted to image with DownloaadImageTask
         DownloadImageTask anotherTask = new DownloadImageTask(setPoster);
         anotherTask.execute(poster);
 
-        Log.i("we gaan", "het zien");
-
+        // favorites are retrieved
         SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
-        SharedPreferences.Editor editor = pref.edit();
-
         Map<String,?> entries = pref.getAll();
         theIDs = entries.keySet();
 
+        // check if ID of the movie is already in favorites
         for (String str : theIDs) {
             if (Objects.equals(str, ID)) {
                 favorites = true;
             }
         }
 
-        Log.i("krijg ik dit nog", "binnen?");
+        // whether add or remove button is shown is decided by favorites
         Button add = (Button) findViewById(R.id.addfave);
         Button remove = (Button) findViewById(R.id.removefave);
 
+        // if movie is already in favorites, it can be deleted
         if (favorites) {
             add.setVisibility(View.GONE);
             remove.setVisibility(View.VISIBLE);
         }
+        // if movie isn't in favorites, it can be added
         else {
             add.setVisibility(View.VISIBLE);
             remove.setVisibility(View.GONE);
         }
     }
 
-    public void addFavorites(View view) {
-
-        SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
-        SharedPreferences.Editor editor = pref.edit();
-        Log.i(ID, title);
-        editor.putString(ID, title);
-        editor.apply();
-    }
-
+    // opens FavoriteActivity when button is pressed
     public void toFavorites(View view) {
 
-        Log.i("Hier moet ik komen", "zeker");
-//        ArrayList<String> IDs = new ArrayList<String>();
-//        ArrayList<String> titles = new ArrayList<String>();
-
+        // favorieten worden opgehaald
         SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
-        Log.i("Hier eigenlijk", String.valueOf(pref));
         Map<String,?> entries = pref.getAll();
         Set<String> theIDs = entries.keySet();
-        Log.i(String.valueOf(theIDs), "iets");
 
         String[] IDs = new String[entries.size()];
         String[] titles = new String[entries.size()];
         Integer i = 0;
-        for (String str : theIDs) {
-            Log.i(str, pref.getString(str, null));
-            IDs[i] = str;
 
+        // favorieten worden in ArrayList gestopt
+        for (String str : theIDs) {
+            IDs[i] = str;
             titles[i] = pref.getString(str, null);
             i++;
         }
 
+        // Intent voor InfoActivity wordt gemaakt
         Intent intent = new Intent(this, FavoriteActivity.class);
-        Log.i(String.valueOf(IDs), String.valueOf(titles));
+
+        // favorieten zijn extra's
         intent.putExtra("IDs", IDs);
         intent.putExtra("titles", titles);
-        Log.i("hallo", "hallo");
+
         startActivity(intent);
     }
 
+    // when clicked, adds movie to favorites
+    public void addFavorites(View view) {
+
+        SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
+        SharedPreferences.Editor editor = pref.edit();
+
+        // ID and title are stored in preferences
+        editor.putString(ID, title);
+        editor.apply();
+    }
+
+    // when clicked, removes movie from favorites
     public void removeFavorites(View view) {
 
         SharedPreferences pref = getApplication().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
 
+        // movie is removed
         editor.remove(ID);
-        editor.commit();
+        editor.apply();
     }
 
+    // go back to start screen when Back is pressed
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, MainActivity.class);

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Movie Search</string>
+    <string name="searchfor">Fill in a search term</string>
+    <string name="confirmsearch">Search</string>
+    <string name="introtext">Search for information on movies by filling in a keyword below and hitting search.</string>
+    <string name="result">Results</string>
+    <string name="faveadd">Add to favorites</string>
+    <string name="tofave">Favorites</string>
+    <string name="faveremove">Remove from favorites</string>
+    <string name="favorites">Favorites</string>
+</resources>
